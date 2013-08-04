@@ -20,6 +20,10 @@ TARGET = djview
 CONFIG += qt thread warn_on 
 QT += network 
 
+# ~~~ QPrinter Support
+
+QT += printsupport
+
 # -- find libraries
 CONFIG(autoconf) {
     # for use with autoconf
@@ -31,8 +35,8 @@ CONFIG(autoconf) {
     #   QMAKE_LFLAGS += ...
 } else:unix:!macx {
     # for use under unix with pkgconfig
-    CONFIG += link_pkgconfig
-    PKGCONFIG += ddjvuapi
+    # CONFIG += link_pkgconfig
+    # PKGCONFIG += ddjvuapi
 } else {
     # for use on other platforms
     # LIBS += -ldjvulibre
@@ -116,3 +120,4 @@ TRANSLATIONS += djview_cs.ts
 TRANSLATIONS += djview_ru.ts
 TRANSLATIONS += djview_zh_cn.ts
 TRANSLATIONS += djview_zh_tw.ts
+
