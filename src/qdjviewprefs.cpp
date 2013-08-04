@@ -26,10 +26,12 @@
 #include <libdjvu/ddjvuapi.h>
 
 #include <QColor>
-#include <QComboBox>
+// ~~~ #include <QComboBox>
+#include <QtWidgets/QComboBox>
 #include <QCoreApplication>
 #include <QDebug>
-#include <QLineEdit>
+// ~~~ #include <QLineEdit>
+#include <QtWidgets/QLineEdit>
 #include <QMetaEnum>
 #include <QMetaObject>
 #include <QMutex>
@@ -42,7 +44,8 @@
 #include <QStringList>
 #include <QTranslator>
 #include <QVariant>
-#include <QWhatsThis>
+// ~~~ #include <QWhatsThis>
+#include <QtWidgets/QWhatsThis>
 
 #include "qdjviewprefs.h"
 #include "qdjview.h"

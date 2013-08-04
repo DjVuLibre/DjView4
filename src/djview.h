@@ -24,7 +24,8 @@
 
 #include <Qt>
 #include <QObject>
-#include <QApplication>
+// ~~~ #include <QApplication>
+#include <QtWidgets/QApplication>
 #include <QEvent>
 #include <QPointer>
 #include <QString>

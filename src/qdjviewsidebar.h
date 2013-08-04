@@ -27,7 +27,9 @@
 #include <QModelIndex>
 #include <QString>
 #include <QUrl>
-#include <QWidget>
+#include <QUrlQuery>
+// ~~~ #include <QWidget>
+#include <QtWidgets/QWidget>
 
 #include <libdjvu/miniexp.h>
 #include <libdjvu/ddjvuapi.h>

@@ -1976,7 +1976,10 @@ QDjView::parseDjVuCgiArguments(QUrl url)
   // parse
   bool djvuopts = false;
   QPair<QString,QString> pair;
-  foreach(pair, url.queryItems())
+  // ~~~
+  QUrlQuery * urlquery = new QUrlQuery(url);
+    // ~~~ foreach(pair, url.queryItems())
+    foreach(pair, urlquery->queryItems())
     {
       if (pair.first.toLower() == "djvuopts")
         djvuopts = true;
@@ -1999,7 +2002,10 @@ QDjView::removeDjVuCgiArguments(QUrl url)
   QList<QPair<QString,QString> > args;
   bool djvuopts = false;
   QPair<QString,QString> pair;
-  foreach(pair, url.queryItems())
+  // ~~~
+  QUrlQuery * urlquery = new QUrlQuery(url);
+    // ~~~ foreach(pair, url.queryItems())
+    foreach(pair, urlquery->queryItems())
     {
       if (pair.first.toLower() == "djvuopts")
         djvuopts = true;
@@ -2007,7 +2013,10 @@ QDjView::removeDjVuCgiArguments(QUrl url)
         args << pair;
     }
   QUrl newurl = url;
-  newurl.setQueryItems(args);
+  // ~~~ newurl.setQueryItems(args);
+  QUrlQuery * newurlquery = new QUrlQuery(newurl);
+  newurlquery->setQueryItems(args);
+  newurl.setQuery(*newurlquery);
   return newurl;
 }
 
@@ -2568,7 +2577,8 @@ QDjView::open(QUrl url)
 void 
 QDjView::sslWhiteList(QString why, bool &okay)
 {
-  QString ewhy = Qt::escape(why);
+  // ~~~ QString ewhy = Qt::escape(why);
+  QString ewhy = why.toHtmlEscaped();
   if (QMessageBox::question(this,
         tr("Certificate validation error - DjView", "dialog caption"),
         tr("<html> %1  Do you want to continue anyway? </html>").arg(ewhy),
@@ -3087,7 +3097,8 @@ QDjView::find(QString find)
         {
           for (int i=find.lastIndexOf("/"); i<find.size(); i++)
             {
-              int c = find[i].toAscii();
+              // ~~~ int c = find[i].toAscii();
+              int c = find[i].toLatin1();
               if (c == 'c')
                 findWidget->setCaseSensitive(true); 
               else if (c == 'C')
@@ -3143,27 +3154,41 @@ QUrl
 QDjView::getDecoratedUrl()
 {
   QUrl url = removeDjVuCgiArguments(documentUrl);
+  QUrlQuery * urlquery = new QUrlQuery(url);
   QPoint center = widget->rect().center();
   QDjVuWidget::Position pos = widget->positionWithClosestAnchor(center);
   int pageNo = pos.pageNo;
   if (url.isValid() && pageNo>=0 && pageNo<pageNum())
     {
-      url.addQueryItem("djvuopts", QString::null);
+      // ~~~ url.addQueryItem("djvuopts", QString::null);
+      urlquery->addQueryItem("djvuopts", QString::null);
+      url.setQuery(*urlquery);
       QList<ddjvu_fileinfo_t> &dp = documentPages;
       QString pagestr = QString("%1").arg(pageNo+1);
       if (hasNumericalPageTitle && pageNo<documentPages.size())
         // Only use page ids when confusions are possible.
         // Always using page ids triggers bugs in the celartem plugin :-(
         pagestr = QString::fromUtf8(dp[pageNo].id);
-      url.addQueryItem("page", pagestr);
+      // ~~~ url.addQueryItem("page", pagestr);
+      urlquery->addQueryItem("djvuopts", QString::null);
+      url.setQuery(*urlquery);
       int rotation = widget->rotation();
+      // ~~~ if (rotation)
       if (rotation)
-        url.addQueryItem("rotate", QString::number(90 * rotation));
+        // ~~~ url.addQueryItem("rotate", QString::number(90 * rotation));
+        {
+            urlquery->addQueryItem("rotate", QString::number(90 * rotation));
+            url.setQuery(*urlquery);
+        }
       int zoom = widget->zoomFactor();
-      url.addQueryItem("zoom", QString::number(zoom));
+      // ~~~ url.addQueryItem("zoom", QString::number(zoom));
+      urlquery->addQueryItem("zoom", QString::number(zoom));
+      url.setQuery(*urlquery);
       double ha = pos.hAnchor / 100.0;
       double va = pos.vAnchor / 100.0;
-      url.addQueryItem("showposition", QString("%1,%2").arg(ha).arg(va));
+      // ~~~ url.addQueryItem("showposition", QString("%1,%2").arg(ha).arg(va));
+      urlquery->addQueryItem("showposition", QString("%1,%2").arg(ha).arg(va));
+      url.setQuery(*urlquery);
     }
   return url;
 }
@@ -3898,6 +3923,7 @@ QDjView::goToLink(QString link, QString target, int fromPage)
 {
   bool inPlace = target.isEmpty() || target=="_self" || target=="_page";
   QUrl url = documentUrl;
+  QUrlQuery * urlquery = new QUrlQuery(url);
   // Internal link
   if (link.startsWith("#"))
     {
@@ -3916,10 +3942,16 @@ QDjView::goToLink(QString link, QString target, int fromPage)
         }
       // Construct url
       url = removeDjVuCgiArguments(url);
-      url.addQueryItem("djvuopts", "");
+      // ~~~ url.addQueryItem("djvuopts", "");
+      urlquery->addQueryItem("djvuopts", "");
+      url.setQuery(*urlquery);
       int pageno = pageNumber(name, fromPage);
       if (pageno>=0 && pageno<=documentPages.size())
-        url.addQueryItem("page", QString::fromUtf8(documentPages[pageno].id));
+        // ~~~ url.addQueryItem("page", QString::fromUtf8(documentPages[pageno].id));
+        {
+            urlquery->addQueryItem("page", QString::fromUtf8(documentPages[pageno].id));
+            url.setQuery(*urlquery);
+        }
     }
   else if (link.startsWith("?"))
     {
@@ -3939,23 +3971,42 @@ QDjView::goToLink(QString link, QString target, int fromPage)
         }
       // Construct url
       QUrl linkUrl;
-      linkUrl.setEncodedUrl("file://d/d" + link.toUtf8());
+      // ~~~ linkUrl.setEncodedUrl("file://d/d" + link.toUtf8());
+      linkUrl.setUrl("file://d/d" + link.toUtf8());
       url = removeDjVuCgiArguments(url);
-      url.addQueryItem("djvuopts", "");
+      // ~~~ url.addQueryItem("djvuopts", "");
+      urlquery->addQueryItem("djvuopts", "");
+      url.setQuery(*urlquery);
+
       QPair<QString,QString> pair;
-      foreach(pair, linkUrl.queryItems())
-        url.addQueryItem(pair.first, pair.second);
+      // ~~~
+      QUrlQuery * linkUrlquery = new QUrlQuery(url);
+        // ~~~ foreach(pair, linkUrl.queryItems())
+        foreach(pair, linkUrlquery->queryItems())
+          // ~~~ url.addQueryItem(pair.first, pair.second);
+        {
+            urlquery->addQueryItem(pair.first, pair.second);
+            url.setQuery(*urlquery);
+
+        }
     }
   else
     {
       // Decode url
       QUrl linkUrl;
-      linkUrl.setEncodedUrl(link.toUtf8());
+      // ~~~ linkUrl.setEncodedUrl(link.toUtf8());
+      linkUrl.setUrl(link.toUtf8());
       // Resolve url
       QList<QPair<QString, QString> > empty;
-      url.setQueryItems(empty);
+      QUrlQuery * urlquery = new QUrlQuery(url);
+      QUrlQuery * linkUrlquery = new QUrlQuery(linkUrl);
+      // ~~~ url.setQueryItems(empty);
+      urlquery->setQueryItems(empty);
+      url.setQuery(*urlquery);
       url = url.resolved(linkUrl);
-      url.setQueryItems(linkUrl.queryItems());
+      // ~~~ url.setQueryItems(linkUrl.queryItems());
+      urlquery->setQueryItems(linkUrlquery->queryItems());
+      url.setQuery(*urlquery);
     }
   // Check url
   if (! url.isValid() || url.isRelative())
@@ -4069,20 +4120,39 @@ QDjView::pointerSelect(const QPoint &pointerPos, const QRect &rect)
   else if (action && action == copyUrl)
     {
       QUrl url = getDecoratedUrl();
+        QUrlQuery * urlquery = new QUrlQuery(url);
       Position pos = widget->position(pointerPos);
       QRect seg = widget->getSegmentForRect(rect, pos.pageNo);
       if (url.isValid() && pos.pageNo>=0 && pos.pageNo<pageNum())
         {
-          if (! url.hasQueryItem("djvuopts"))
-            url.addQueryItem("djvuopts", QString::null);
+          // ~~~ if (! url.hasQueryItem("djvuopts"))
+          // ~~~ url.addQueryItem("djvuopts", QString::null);
+          if (! urlquery->hasQueryItem("djvuopts"))
+          {
+              urlquery->addQueryItem("djvuopts", QString::null);
+              url.setQuery(*urlquery);
+          }
+
           QList<ddjvu_fileinfo_t> &dp = documentPages;
-          if (! url.hasQueryItem("page"))
+
+          // ~~~ if (! url.hasQueryItem("page"))
+          if (! urlquery->hasQueryItem("page"))
             if (pos.pageNo>=0 && pos.pageNo<documentPages.size())
-              url.addQueryItem("page", QString::fromUtf8(dp[pos.pageNo].id));
+              // ~~~ url.addQueryItem("page", QString::fromUtf8(dp[pos.pageNo].id));
+            {
+                urlquery->addQueryItem("page", QString::fromUtf8(dp[pos.pageNo].id));
+                url.setQuery(*urlquery);
+            }
           if (! rect.isEmpty())
-            url.addQueryItem("highlight", QString("%1,%2,%3,%4")
-                             .arg(seg.left()).arg(seg.top())
-                             .arg(seg.width()).arg(seg.height()) );
+            // ~~~ url.addQueryItem("highlight", QString("%1,%2,%3,%4")
+            // ~~~                  .arg(seg.left()).arg(seg.top())
+            // ~~~                  .arg(seg.width()).arg(seg.height()) );
+          {
+            urlquery->addQueryItem("highlight", QString("%1,%2,%3,%4")
+                            .arg(seg.left()).arg(seg.top())
+                            .arg(seg.width()).arg(seg.height()) );
+              url.setQuery(*urlquery);
+          }
           QApplication::clipboard()->setText(url.toString());
         }
     }
@@ -4187,8 +4257,10 @@ QDjView::performAbout(void)
        "<h2>DjVuLibre DjView %1</h2>%2"
        "<p>"
        "Viewer for DjVu documents<br>"
-       "<a href=%3>%3</a><br>"
-       "Copyright \251 2006-- L\351on Bottou."
+       // ~~~ "<a href=%3>%3</a><br>"
+       "<a href=%3>based on %3</a><br>"
+       // ~~~ "Copyright \251 2006-- L\351on Bottou."
+       "\u00A9 2006-2013 L\u00E9on Bottou and others."
        "</p>"
        "<p align=justify><small>"
        "This program is free software. "
@@ -4444,7 +4516,9 @@ QDjView::fillRecent()
           QString name = url.toLocalFile();
           if (name.isEmpty())
             name = removeDjVuCgiArguments(url).toString();
-          QFontMetrics metrics = QFont();
+          // ~~~ QFontMetrics metrics = QFont();
+          QFont font;
+          QFontMetrics metrics(font);
           name = metrics.elidedText(name, Qt::ElideMiddle, 400);
           name = QString("%1 [%2]").arg(base).arg(name);
           QAction *action = recentMenu->addAction(name);

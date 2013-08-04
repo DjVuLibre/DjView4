@@ -23,11 +23,15 @@
 #endif
 
 #include <QObject>
-#include <QDialog>
-#include <QLabel>
-#include <QMessageBox>
+// ~~~ #include <QDialog>
+#include <QtWidgets/QDialog>
+// ~~~ #include <QLabel>
+#include <QtWidgets/QLabel>
+// ~~~ #include <QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QString>
-#include <QWidget>
+// ~~~ #include <QWidget>
+#include <QtWidgets/QWidget>
 
 #include <libdjvu/miniexp.h>
 #include <libdjvu/ddjvuapi.h>

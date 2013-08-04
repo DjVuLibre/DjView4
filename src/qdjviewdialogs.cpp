@@ -46,25 +46,32 @@
 # include <tiffio.h>
 #endif
 
-#include <QApplication>
+// ~~~ #include <QApplication>
+#include <QtWidgets/QApplication>
 #include <QClipboard>
 #include <QCloseEvent>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
-#include <QDialog>
+// ~~~ #include <QDialog>
+#include <QtWidgets/QDialog>
 #include <QFile>
-#include <QFileDialog>
+#include <QtWidgets/QFileDialog>
+// ~~~ #include <QtWidgets/QFileDialog>
 #include <QFileInfo>
 #include <QFont>
-#include <QHBoxLayout>
-#include <QHeaderView>
+// ~~~ #include <QHBoxLayout>
+#include <QtWidgets/QHBoxLayout>
+// ~~~ #include <QHeaderView>
+#include <QtWidgets/QHeaderView>
 #include <QImageWriter>
-#include <QItemDelegate>
+// ~~~ #include <QItemDelegate>
+#include <QtWidgets/QItemDelegate>
 #include <QKeySequence>
 #include <QList>
 #include <QMap>
-#include <QMessageBox>
+// ~~~ #include <QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QObject>
 #include <QPainter>
 #include <QPrinter>
@@ -143,7 +150,8 @@ QDjViewErrorDialog::error(QString msg, QString, int)
   // Remove [1-nnnnn] prefix from djvulibre-3.5
   if (msg.startsWith("["))
     msg = msg.replace(QRegExp("^\\[\\d*-?\\d*\\]\\s*") , "");
-  msg = Qt::escape(msg);
+  // ~~~ msg = Qt::escape(msg);
+  msg = QString(msg).toHtmlEscaped();
   // Ignore empty and duplicate messages
   if (msg.isEmpty()) return;
   if (!d->messages.isEmpty() && msg == d->messages[0]) return;
@@ -212,7 +220,8 @@ QDjViewAuthDialog::pass() const
 void 
 QDjViewAuthDialog::setInfo(QString why)
 {
-  QString txt = QString("<html>%1</html>").arg(Qt::escape(why));
+  // ~~~ QString txt = QString("<html>%1</html>").arg(Qt::escape(why));
+  QString txt = QString("<html>%1</html>").arg(QString(why).toHtmlEscaped());
   d->ui.whyLabel->setText(txt);
 }
 
@@ -655,13 +664,15 @@ QDjViewMetaDialog::QDjViewMetaDialog(QDjView *parent)
   d->ui.docTable->setHorizontalHeaderLabels(labels);
   d->ui.docTable->horizontalHeader()->setHighlightSections(false);
   d->ui.docTable->horizontalHeader()->setStretchLastSection(true);
-  d->ui.docTable->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  // ~~~ d->ui.docTable->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  d->ui.docTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
   d->ui.docTable->verticalHeader()->hide();
   d->ui.pageTable->setColumnCount(2);
   d->ui.pageTable->setHorizontalHeaderLabels(labels);
   d->ui.pageTable->horizontalHeader()->setHighlightSections(false);
   d->ui.pageTable->horizontalHeader()->setStretchLastSection(true);
-  d->ui.pageTable->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  // ~~~ d->ui.pageTable->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  d->ui.pageTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
   d->ui.pageTable->verticalHeader()->hide();
   d->ui.pageCombo->setEnabled(false);
   d->ui.jumpButton->setEnabled(false);

@@ -358,7 +358,8 @@ QDjVuNetDocument::newstream(int streamid, QString, QUrl url)
   // network request
   QNetworkRequest request(url);
   QString agent = "Djview/" + QDjViewPrefs::versionString();
-  request.setRawHeader("User-Agent", agent.toAscii());
+  // ~~~ request.setRawHeader("User-Agent", agent.toAscii());
+  request.setRawHeader("User-Agent", agent.toLatin1());
   QNetworkReply *reply = manager()->get(request);
   connect(reply, SIGNAL(readyRead()), 
           p, SLOT(readyRead()) );

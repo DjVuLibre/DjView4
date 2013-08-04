@@ -40,6 +40,8 @@
 #include <QString>
 #include <QTimer>
 #include <QUrl>
+// ~~~
+#include <QUrlQuery>
 #include <QVector>
 
 #if DDJVUAPI_VERSION < 17
@@ -494,7 +496,10 @@ QDjVuDocument::setUrl(QDjVuContext *ctx, QUrl url)
     cache = false;
   bool djvuopts = false;
   QPair<QString,QString> pair;
-  foreach(pair, url.queryItems())
+  // ~~~
+  QUrlQuery * urlquery = new QUrlQuery(url);
+    // ~~~ foreach(pair, url.queryItems())
+    foreach(pair, urlquery->queryItems())
     {
       if (pair.first.toLower() == "djvuopts")
         djvuopts = true;
@@ -797,7 +802,8 @@ QDjVuPage::handle(ddjvu_message_t *msg)
       emit pageinfo();
       return true;
     case DDJVU_CHUNK:
-      emit chunk(QString::fromAscii(msg->m_chunk.chunkid));
+      // ~~~ emit chunk(QString::fromAscii(msg->m_chunk.chunkid));
+      emit chunk(QString::fromLatin1(msg->m_chunk.chunkid));
       return true;
     case DDJVU_RELAYOUT:
       emit relayout();

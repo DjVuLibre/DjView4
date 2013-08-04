@@ -24,9 +24,11 @@
 
 #include <Qt>
 #include <QByteArray>
-#include <QDialog>
+// ~~~ #include <QDialog>
+#include <QtWidgets/QDialog>
 #include <QFlags>
-#include <QFrame>
+// ~~~ #include <QFrame>
+#include <QtWidgets/QFrame>
 #include <QObject>
 #include <QPainter>
 #include <QSettings>
@@ -35,7 +37,8 @@
 #include <QStringList>
 #include <QUrl>
 #include <QVariant>
-#include <QWidget>
+// ~~~ #include <QWidget>
+#include <QtWidgets/QWidget>
 
 
 #ifndef DJVIEW_ORG

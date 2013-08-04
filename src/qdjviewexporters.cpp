@@ -754,13 +754,19 @@ QDjViewPSExporter::loadPrintSetup(QPrinter *printer, QPrintDialog *dialog)
   collate = true;
   lastfirst = false;
 #if QT_VERSION >= 0x40400
-  QSpinBox* lcop = qFindChild<QSpinBox*>(dialog, "copies");
-  QCheckBox* lcol = qFindChild<QCheckBox*>(dialog, "collate");
-  QCheckBox* lplf = qFindChild<QCheckBox*>(dialog, "reverse");
+  // ~~~ QSpinBox* lcop = qFindChild<QSpinBox*>(dialog, "copies");
+  QSpinBox* lcop = dialog->findChild<QSpinBox*>("copies");
+  // ~~~ QCheckBox* lcol = qFindChild<QCheckBox*>(dialog, "collate");
+  QCheckBox* lcol = dialog->findChild<QCheckBox*>("collate");
+  // ~~~ QCheckBox* lplf = qFindChild<QCheckBox*>(dialog, "reverse");
+  QCheckBox* lplf = dialog->findChild<QCheckBox*>("reverse");
 #else
-  QSpinBox* lcop = qFindChild<QSpinBox*>(dialog, "sbNumCopies");
-  QCheckBox* lcol = qFindChild<QCheckBox*>(dialog, "chbCollate");
-  QCheckBox* lplf = qFindChild<QCheckBox*>(dialog, "chbPrintLastFirst");
+  // ~~~ QSpinBox* lcop = qFindChild<QSpinBox*>(dialog, "sbNumCopies");
+  QSpinBox* lcop = dialog->findChild<QSpinBox*>("sbNumCopies");
+  // ~~~ QCheckBox* lcol = qFindChild<QCheckBox*>(dialog, "chbCollate");
+  QCheckBox* lcol = dialog->findChild<QCheckBox*>("chbCollate");
+  // ~~~ QCheckBox* lplf = qFindChild<QCheckBox*>(dialog, "chbPrintLastFirst");
+  QCheckBox* lplf = dialog->findChild<QCheckBox*>("chbPrintLastFirst");
 #endif
   if (lcop)
     copies = qMax(1, lcop->value());
@@ -2133,9 +2139,9 @@ QDjViewPrnExporter::save(QString fileName)
   this->fileName = fileName;
   printer = new QPrinter(QPrinter::HighResolution);
   printer->setOutputFileName(fileName);
-#if defined(Q_OS_UNIX) && !defined(Q_WS_MAC) 
-  printer->setOutputFormat(QPrinter::PostScriptFormat);
-#endif
+  // ~~~ #if defined(Q_OS_UNIX) && !defined(Q_WS_MAC)
+  // ~~~     printer->setOutputFormat(QPrinter::PostScriptFormat);
+  // ~~~ #endif
   return start();
 }
 
@@ -2225,7 +2231,8 @@ QDjViewPrnExporter::doPage()
     }
   else if (imageFormat == QImage::Format_Indexed8)
     {
-      img.setNumColors(256);
+      // ~~~ img.setNumColors(256);
+      img.setColorCount(256);
       for (int i=0; i<256; i++)
         img.setColor(i, qRgb(i,i,i));
       fmt = ddjvu_format_create(DDJVU_FORMAT_GREY8, 0, 0);

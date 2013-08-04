@@ -25,9 +25,12 @@
 #include "qdjvu.h"
 
 #include <QPoint>
-#include <QWidget>
-#include <QMenu>
-#include <QAbstractScrollArea>
+// ~~~ #include <QWidget>
+#include <QtWidgets/QWidget>
+// ~~~ #include <QMenu>
+#include <QtWidgets/QMenu>
+// ~~~ #include <QAbstractScrollArea>
+#include <QtWidgets/QAbstractScrollArea>
 
 
 class QDjVuPrivate;

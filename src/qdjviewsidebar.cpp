@@ -23,41 +23,60 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <QAbstractItemDelegate>
+// ~~~ #include <QAbstractItemDelegate>
+#include <QtWidgets/QAbstractItemDelegate>
 #include <QAbstractListModel>
-#include <QAction>
-#include <QActionGroup>
-#include <QApplication>
-#include <QComboBox>
+// ~~~ #include <QAction>
+#include <QtWidgets/QAction>
+// ~~~ #include <QActionGroup>
+#include <QtWidgets/QActionGroup>
+// ~~~ #include <QApplication>
+#include <QtWidgets/QApplication>
+// ~~~ #include <QComboBox>
+#include <QtWidgets/QComboBox>
 #include <QContextMenuEvent>
-#include <QCheckBox>
+// ~~~ #include <QCheckBox>
+#include <QtWidgets/QCheckBox>
 #include <QDebug>
 #include <QEvent>
 #include <QFont>
 #include <QFontMetrics>
-#include <QHBoxLayout>
-#include <QHeaderView>
-#include <QItemDelegate>
-#include <QLabel>
-#include <QLineEdit>
+// ~~~ #include <QHBoxLayout>
+#include <QtWidgets/QHBoxLayout>
+// ~~~ #include <QHeaderView>
+#include <QtWidgets/QHeaderView>
+// ~~~ #include <QItemDelegate>
+#include <QtWidgets/QItemDelegate>
+// ~~~ #include <QLabel>
+#include <QtWidgets/QLabel>
+// ~~~ #include <QLineEdit>
+#include <QtWidgets/QLineEdit>
 #include <QList>
-#include <QListView>
+// ~~~ #include <QListView>
+#include <QtWidgets/QListView>
 #include <QMap>
-#include <QMenu>
+// ~~~ #include <QMenu>
+#include <QtWidgets/QMenu>
 #include <QPainter>
 #include <QPainterPath>
-#include <QPushButton>
+// ~~~ #include <QPushButton>
+#include <QtWidgets/QPushButton>
 #include <QPixmap>
 #include <QRegExp>
 #include <QResizeEvent>
-#include <QStackedLayout>
+// ~~~ #include <QStackedLayout>
+#include <QtWidgets/QStackedLayout>
 #include <QStringList>
 #include <QTimer>
-#include <QToolBar>
-#include <QToolButton>
-#include <QTreeWidget>
+// ~~~ #include <QToolBar>
+#include <QtWidgets/QToolBar>
+// ~~~ #include <QToolButton>
+#include <QtWidgets/QToolButton>
+// ~~~ #include <QTreeWidget>
+#include <QtWidgets/QTreeWidget>
 #include <QVariant>
-#include <QVBoxLayout>
+// ~~~ #include <QVBoxLayout>
+#include <QtWidgets/QVBoxLayout>
 
 #include <libdjvu/ddjvuapi.h>
 #include <libdjvu/miniexp.h>
@@ -188,10 +207,15 @@ QDjViewOutline::pageNumber(const char *link)
   if (link == 0 || link[0] != '?')
     return -1;
   QUrl url = QUrl::fromEncoded(QByteArray("http://f/f") + link);
-  if (url.hasQueryItem("page"))
-    return djview->pageNumber(url.queryItemValue("page"));
-  else if (url.hasQueryItem("pageno"))
-    return djview->pageNumber("$" + url.queryItemValue("pageno"));
+    QUrlQuery * urlquery = new QUrlQuery(url);
+  // ~~~ if (url.hasQueryItem("page"))
+  if (urlquery->hasQueryItem("page"))
+    // ~~~ return djview->pageNumber(url.queryItemValue("page"));
+    return djview->pageNumber(urlquery->queryItemValue("page"));
+  // ~~~ else if (url.hasQueryItem("pageno"))
+  else if (urlquery->hasQueryItem("pageno"))
+    // ~~~ return djview->pageNumber("$" + url.queryItemValue("pageno"));
+    return djview->pageNumber("$" + urlquery->queryItemValue("pageno"));
   return -1;
 }
 
@@ -1405,7 +1429,8 @@ QDjViewFind::Model::animTimeout()
 {
   if (animButton && !animIcon.isNull())
     {
-      if (animButton->icon().serialNumber() == findIcon.serialNumber())
+      // ~~~ if (animButton->icon().serialNumber() == findIcon.serialNumber())
+      if (animButton->icon().cacheKey() == findIcon.cacheKey())
         animButton->setIcon(animIcon);
       else
         animButton->setIcon(findIcon);

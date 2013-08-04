@@ -58,23 +58,28 @@ static bool verbose = true;
 static bool appReady = false;
 
 static void 
-qtMessageHandler(QtMsgType type, const char *msg)
+// ~~~ qtMessageHandler(QtMsgType type, const char *msg)
+qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
   switch (type) 
     {
     case QtFatalMsg:
-      fprintf(stderr,"djview fatal error: %s\n", msg);
+      // ~~~ fprintf(stderr,"djview fatal error: %s\n", msg);
+      fprintf(stderr,"djview fatal error: %s\n", msg.toLatin1().data());      
       abort();
     case QtCriticalMsg:
-      fprintf(stderr,"djview critical error: %s\n", msg);
+      // ~~~ fprintf(stderr,"djview critical error: %s\n", msg);
+      fprintf(stderr,"djview critical error: %s\n", msg.toLatin1().data());
       break;
     case QtWarningMsg:
       if (verbose || !appReady)
-        fprintf(stderr,"djview: %s\n", msg);
+        // ~~~ fprintf(stderr,"djview: %s\n", msg);
+        fprintf(stderr,"djview: %s\n", msg.toLatin1().data());
       break;
     default:
       if (verbose || !appReady)
-        fprintf(stderr,"%s\n", msg);
+        // ~~~ fprintf(stderr,"%s\n", msg);
+        fprintf(stderr,"%s\n", msg.toLatin1().data());
       break;
     }
 }
@@ -101,8 +106,8 @@ QDjViewApplication::QDjViewApplication(int &argc, char **argv)
     context(argv[0])
 {
   // Message handler
-  qInstallMsgHandler(qtMessageHandler);
-  
+  // ~~~ qInstallMsgHandler(qtMessageHandler);
+    qInstallMessageHandler(qtMessageHandler);
   // Locale should not mess with printf
   // We do this again because old libdjvulibre
   // did not correctly set LC_NUMERIC.
@@ -368,7 +373,8 @@ main(int argc, char *argv[])
   QApplication::setApplicationName(DJVIEW_APP);
   
   // Message handler
-  qInstallMsgHandler(qtMessageHandler);
+  // ~~~ qInstallMsgHandler(qtMessageHandler);
+    qInstallMessageHandler(qtMessageHandler);
 #ifdef Q_OS_UNIX
   const char *s = ::getenv("DJVIEW_VERBOSE");
   if (s && strcmp(s,"0"))

@@ -25,8 +25,10 @@
 #include <Qt>
 #include <QDateTime>
 #include <QObject>
-#include <QMainWindow>
-#include <QMessageBox>
+// ~~~ #include <QMainWindow>
+#include <QtWidgets/QMainWindow>
+// ~~~ #include <QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QPair>
 #include <QPointer>
 #include <QString>
