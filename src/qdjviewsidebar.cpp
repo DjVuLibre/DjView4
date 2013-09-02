@@ -87,10 +87,18 @@ QDjViewOutline::QDjViewOutline(QDjView *djview)
   tree->setUniformRowHeights(true);
   tree->header()->hide();
   tree->header()->setStretchLastSection(true);
-  tree->setEditTriggers(QAbstractItemView::NoEditTriggers);
   tree->setSelectionBehavior(QAbstractItemView::SelectRows);
   tree->setSelectionMode(QAbstractItemView::SingleSelection);
   tree->setTextElideMode(Qt::ElideRight);
+  tree->setDragEnabled(true);//HACK
+  tree->viewport()->setAcceptDrops(true);//HACK
+  tree->setDropIndicatorShown(true);//HACK
+  tree->setDragDropMode(QAbstractItemView::InternalMove);//HACK
+  tree->setEditTriggers(QAbstractItemView::DoubleClicked);//HACK
+
+  connect(tree->model(), SIGNAL(rowsInserted(const QModelIndex&,int,int)),
+          this, SLOT(setModified())); // HACK
+
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setMargin(0);
   layout->setSpacing(0);
@@ -231,8 +239,13 @@ QDjViewOutline::fillItems(QTreeWidgetItem *root, miniexp_t expr)
               if (! pagename.isEmpty())
                 item->setToolTip(0, tr("Go: page %1.").arg(pagename));
             }
+          item->setFlags(item->flags() | Qt::ItemIsDragEnabled);//HACK
+          item->setFlags(item->flags() | Qt::ItemIsEditable);//HACK
+
           // recurse
           fillItems(item, miniexp_cddr(s));
+          if (item->childCount() > 0)
+            item->setFlags(item->flags() | Qt::ItemIsDropEnabled);//HACK
         }
     }
 }
@@ -301,6 +314,12 @@ QDjViewOutline::itemActivated(QTreeWidgetItem *item)
       if (pageno >= 0)
         djview->goToPage(pageno);
     }
+}
+
+void 
+QDjViewOutline::setModified()
+{
+  qDebug() << "outline modified";
 }
 
 

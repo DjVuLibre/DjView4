@@ -65,6 +65,7 @@ public slots:
 protected slots:
   void pageChanged(int pageno);
   void itemActivated(QTreeWidgetItem *item);
+  void setModified();
 private:
   QDjView *djview;
   QTreeWidget *tree;
